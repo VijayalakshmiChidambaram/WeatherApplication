@@ -6,7 +6,9 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
-// Helper function to create Retrofit instance with Moshi
+/** Helper function to create Retrofit instance with Moshi
+ */
+
 fun createWeatherService(): WeatherService {
     val moshi = Moshi.Builder()
         .add(KotlinJsonAdapterFactory()) // For handling Kotlin-specific features

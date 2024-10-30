@@ -2,17 +2,24 @@ package com.example.weatherapplication
 
 import kotlinx.coroutines.runBlocking
 
-class WeatherRepository(private val weatherService: WeatherService) {
+interface WeatherRepositoryInterface {
+    suspend fun getWeatherByCity(city: String): WeatherResponse
+    suspend fun getWeatherByCoordinates(latitude: Double, longitude: Double): WeatherResponse
+}
 
-    private val apiKey = "1c1dab9e7b13cb240b29f3917c79ddc0" // Add your API key
+/**
+ * Repository functions to fetch weather by city name, by geographic coordinates using API key
+ */
 
-    // Fetch weather by city name
-    suspend fun getWeatherByCity(city: String): WeatherResponse {
+class WeatherRepository(private val weatherService: WeatherService) : WeatherRepositoryInterface{
+
+    private val apiKey = "1c1dab9e7b13cb240b29f3917c79ddc0"
+
+    override suspend fun getWeatherByCity(city: String): WeatherResponse {
         return weatherService.getWeatherByCity(city, apiKey)
     }
 
-    // Fetch weather by geographic coordinates
-    suspend fun getWeatherByCoordinates(latitude: Double, longitude: Double): WeatherResponse {
+    override suspend fun getWeatherByCoordinates(latitude: Double, longitude: Double): WeatherResponse {
         return weatherService.getWeatherByCoordinates(latitude, longitude, apiKey)
     }
 }

@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import android.Manifest
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -32,6 +33,12 @@ import androidx.compose.foundation.background
 import androidx.compose.material3.TextField
 import androidx.compose.ui.graphics.Color
 
+/**
+ * UI for the application which handles
+ * Load last searched city
+ * Handle location permission
+ * Save the last searched city
+ */
 @Composable
 fun WeatherScreen(viewModel: WeatherViewModel) {
     var cityInput by remember { mutableStateOf("") }
@@ -40,16 +47,13 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("weather_prefs", Context.MODE_PRIVATE)
 
-    // Load last searched city
     LaunchedEffect(Unit) {
         val lastCity = sharedPreferences.getString("last_city", "")
         if (!lastCity.isNullOrEmpty()) {
             viewModel.getWeatherByCity(lastCity)
-            cityInput = lastCity
         }
     }
 
-    // Handle location permission
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -75,7 +79,8 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
     ) {
         TextField(
             value = cityInput,
-            onValueChange = { cityInput = it },
+            onValueChange = { cityInput = it
+                            },
             label = { Text("Enter a US City") },
             modifier = Modifier
                 .background(Color.Black)
@@ -86,14 +91,12 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
         Spacer(modifier = Modifier.height(8.dp))
 
         Button(onClick = {
-            if (cityInput.isNotEmpty()) {
+            if (cityInput.isNotEmpty() && cityInput.all { it.isLetter() }) {
                 viewModel.getWeatherByCity(cityInput)
-
-                // Save the last searched city
-                with(sharedPreferences.edit()) {
-                    putString("last_city", cityInput)
-                    apply()
-                }
+                    with(sharedPreferences.edit()) {
+                        putString("last_city", cityInput)
+                        apply()
+                    }
             }
         }) {
             Text("Get Weather")
@@ -102,27 +105,34 @@ fun WeatherScreen(viewModel: WeatherViewModel) {
         Spacer(modifier = Modifier.height(16.dp))
 
         weatherState.weatherInfo?.let { weatherInfo ->
-            WeatherDisplay(weatherInfo)
+            WeatherDisplay(weatherInfo, weatherState.errorMessage)
         }
     }
 }
 
 @Composable
-fun WeatherDisplay(weatherInfo: WeatherResponse) {
+fun WeatherDisplay(weatherInfo: WeatherResponse, error: String?) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        if(error == null)
+        {
         Text(text = "City: ${weatherInfo.name}")
         Text(text = "Temperature: ${weatherInfo.main.temp}°C")
         Text(text = "Description: ${weatherInfo.weather[0].description}")
 
-        val iconCode = weatherInfo.weather[0].icon
-        println("iconCode : $iconCode")
-        val iconUrl = "https://openweathermap.org/img/wn/$iconCode@2x.png"
-        val painter = rememberImagePainter(iconUrl)
+                val iconCode = weatherInfo.weather[0].icon
+                println("iconCode : $iconCode")
+                val iconUrl = "https://openweathermap.org/img/wn/$iconCode@2x.png"
+                val painter = rememberImagePainter(iconUrl)
 
-        Image(
-            painter = painter,
-            contentDescription = weatherInfo.weather[0].description,
-            modifier = Modifier.size(64.dp)
-        )
+                Image(
+                    painter = painter,
+                    contentDescription = weatherInfo.weather[0].description,
+                    modifier = Modifier.size(64.dp)
+                )
+            }
+            else
+            {
+                Text(text = "Please enter a valid city name", color = Color.Red)
+            }
     }
 }

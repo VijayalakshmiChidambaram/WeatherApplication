@@ -1,5 +1,6 @@
 package com.example.weatherapplication
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -7,8 +8,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class WeatherViewModel(
-    private val weatherRepository: WeatherRepository,
-    private val getLocation: LocationFind
+    private val weatherRepository: WeatherRepositoryInterface,
+    private val getLocation: LocationProvider
 ) : ViewModel() {
 
     private val _weatherState = MutableStateFlow(WeatherState())
@@ -39,6 +40,7 @@ class WeatherViewModel(
         viewModelScope.launch {
             _weatherState.value = _weatherState.value.copy(isLoading = true)
             val location = getLocation.getCurrentLocation()
+            Log.d("Vjlocation", "$location")
             location?.let {
                 try {
                     val response = weatherRepository.getWeatherByCoordinates(it.latitude, it.longitude)

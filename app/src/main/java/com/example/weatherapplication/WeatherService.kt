@@ -4,6 +4,9 @@ import com.squareup.moshi.JsonClass
 import retrofit2.http.GET
 import retrofit2.http.Query
 
+/**
+ * Service calls to retrieve weather information by either city or location
+ */
 interface WeatherService {
     // Get weather by city name
     @GET("weather")
@@ -23,6 +26,9 @@ interface WeatherService {
     ): WeatherResponse
 }
 
+/**
+ * Data class representing the weather responses
+ */
 @JsonClass(generateAdapter = true)
 data class WeatherResponse(
     val main: Main,

@@ -62,12 +62,8 @@ dependencies {
     implementation(libs.ui)
     implementation(libs.hilt.android)
     implementation(libs.accompanist.permissions)
-    implementation(libs.coil.compose)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.appcompat)
-    implementation(libs.coil.compose.v222)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit.v113)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -76,18 +72,16 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    testImplementation(libs.junit)
-    testImplementation(libs.mockito.core)
-    testImplementation(libs.mockito.kotlin)
-    testImplementation(libs.kotlinx.coroutines.test)
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
-    testImplementation(libs.junit)
-    testImplementation(libs.mockito.core.v3124)
-    testImplementation(libs.mockito.inline) // For mocking final classes
-    testImplementation(libs.kotlinx.coroutines.test.v152) // For testing coroutines
+    androidTestImplementation("junit:junit:4.13.2")
+    androidTestImplementation("org.mockito:mockito-core:5.4.0")
+    androidTestImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+    androidTestImplementation("androidx.arch.core:core-testing:2.2.0")
+    androidTestImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    androidTestImplementation("org.mockito:mockito-android:5.4.0") // or latest version
 
 
-    androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)

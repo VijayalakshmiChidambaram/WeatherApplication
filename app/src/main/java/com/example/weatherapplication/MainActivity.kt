@@ -12,7 +12,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // ViewModel and dependencies initialization
+        /** ViewModel and dependencies initialization
+         */
         val weatherService = createWeatherService()
         val weatherRepository = WeatherRepository(weatherService)
         val locationFinder = LocationFind(this)
